@@ -82,11 +82,14 @@ namespace Italbytz.Adapters.Graph.Tests
             var graph = new UndirectedGraph<string, ITaggedEdge<string, double>>() { Edges = edges };
             var parameters = new ShortestPathsParameters(vertices, graph);
             solver = new ShortestPathsSolver(vertex0);
-            var solution = solver.Solve(parameters);
+
+            ((ShortestPathsSolver)solver).ManualDisjkstra(parameters);
+
+            /*var solution = solver.Solve(parameters);
             foreach (var path in solution.Paths)
             {
                 System.Console.WriteLine(path.ToString());
-            }
+            }*/
         }
 
     }
