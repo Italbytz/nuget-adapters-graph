@@ -18,6 +18,13 @@ namespace Italbytz.Adapters.Graph
             Graph = graph.ToGenericGraph();
         }
 
+        public ShortestPathsParameters(string[] vertices,
+            Ports.Graph.IUndirectedGraph<string, ITaggedEdge<string, double>> graph)
+        {
+            Vertices = vertices;
+            Graph = graph;
+        }
+
         private QuikGraph.UndirectedGraph<string, QuikGraph.TaggedEdge<string, double>> CreateRandomGraph()
         {
             var graph = new QuikGraph.UndirectedGraph<string, QuikGraph.TaggedEdge<string, double>>();
