@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
+		<Nullable>enable</Nullable>
+		<PackOnBuild>true</PackOnBuild>
+		<PackageVersion>0.1.0</PackageVersion>
+		<Authors>Robin Nunkesser</Authors>
+		<PackageLicenseUrl>https://github.com/Italbytz/nuget-adapters-graph/blob/main/LICENSE</PackageLicenseUrl>
+		<PackageProjectUrl>https://github.com/Italbytz/nuget-adapters-graph</PackageProjectUrl>
+		<Description>A set of helpful adapters for graphs and graph algorithms to use with Ports and Adapters.</Description>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+		<LangVersion>9.0</LangVersion>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+		<LangVersion>9.0</LangVersion>
+	</PropertyGroup>
+	<ItemGroup>
+		<None Remove="QuikGraph" />
+		<None Remove="QuikGraph.Graphviz" />
+		<None Remove="Microsoft.Msagl" />
+		<None Remove="Microsoft.Msagl.Drawing" />
+		<None Remove="Italbytz.Ports.Graph" />
+		<None Remove="MinimumSpanningTree\" />
+		<None Remove="ShortestPaths\" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="QuikGraph" Version="2.5.0" />
+		<PackageReference Include="QuikGraph.Graphviz" Version="2.5.0" />
+		<PackageReference Include="Microsoft.Msagl" Version="1.1.6" />
+		<PackageReference Include="Italbytz.Ports.Graph" Version="0.2.0" />
+		<PackageReference Include="Italbytz.Ports.Algorithms" Version="0.1.0" />
+		<PackageReference Include="Italbytz.Extensions.Random" Version="0.1.1" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="MinimumSpanningTree\" />
+	  <Folder Include="ShortestPaths\" />
+	</ItemGroup>
+</Project>
