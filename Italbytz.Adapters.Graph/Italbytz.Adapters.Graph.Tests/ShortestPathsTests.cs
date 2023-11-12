@@ -83,13 +83,11 @@ namespace Italbytz.Adapters.Graph.Tests
             var parameters = new ShortestPathsParameters(vertices, graph);
             solver = new ShortestPathsSolver(vertex0);
 
-            ((ShortestPathsSolver)solver).ManualDisjkstra(parameters);
-
-            /*var solution = solver.Solve(parameters);
+            var solution = solver.Solve(parameters);
             foreach (var path in solution.Paths)
             {
                 System.Console.WriteLine(path.ToString());
-            }*/
+            }
         }
 
     }
