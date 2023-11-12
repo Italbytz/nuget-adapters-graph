@@ -19,6 +19,7 @@ namespace Italbytz.Adapters.Graph
         private readonly String rootVertex;
         private readonly Dictionary<string, double> verticesCost = new();
         private readonly Dictionary<string, bool> expandedVertices = new();
+        private readonly Dictionary<(string, string, double), bool> examinedEdges = new();
 
         public ShortestPathsSolver() : this("A") { }
 
@@ -29,6 +30,8 @@ namespace Italbytz.Adapters.Graph
 
         private void ExamineEdgeHandler(QuikGraph.TaggedEdge<string, double> edge)
         {
+            examinedEdges[(edge.Source, edge.Target, edge.Tag)] = true;
+
             var pathCost = verticesCost[edge.Source] + edge.Tag;
             if (!expandedVertices[edge.Source])
             {
@@ -56,7 +59,10 @@ namespace Italbytz.Adapters.Graph
             var bidirectionalGraph = graph.ToBidirectionalGraph();
             var dijkstra = new DijkstraShortestPathAlgorithm<string, QuikGraph.TaggedEdge<string, double>>(bidirectionalGraph, ((edge) => edge.Tag));
 
-            InitializeDictionaries(graph.Vertices);
+            InitializeVerticesDictionaries(graph.Vertices);
+            InitializeEdgesDictionaries(graph.Edges);
+            Console.WriteLine(value: ((UndirectedGraph<string, ITaggedEdge<string, double>>)parameters.Graph).ToGraphviz(false, expandedVertices, examinedEdges));
+
             dijkstra.ExamineEdge += new EdgeAction<string, QuikGraph.TaggedEdge<string, double>>(ExamineEdgeHandler);
             dijkstra.TreeEdge += new EdgeAction<string, QuikGraph.TaggedEdge<string, double>>(TreeEdgeHandler);
             dijkstra.DiscoverVertex += new VertexAction<string>(DiscoverVertexHandler);
@@ -91,6 +97,10 @@ namespace Italbytz.Adapters.Graph
                     paths.Add(pathString);
                 }
             }
+
+            Console.WriteLine(value: ((UndirectedGraph<string, ITaggedEdge<string, double>>)parameters.Graph).ToGraphviz(false, expandedVertices, examinedEdges));
+
+
             return new ShortestPathsSolution
             {
                 Paths = paths
@@ -123,7 +133,7 @@ namespace Italbytz.Adapters.Graph
             //Console.WriteLine($"Discovering vertex {vertex}");            
         }
 
-        private void InitializeDictionaries(IEnumerable<string> vertices)
+        private void InitializeVerticesDictionaries(IEnumerable<string> vertices)
         {
             foreach (var vertex in vertices)
             {
@@ -133,6 +143,12 @@ namespace Italbytz.Adapters.Graph
             verticesCost[rootVertex] = 0.0;
         }
 
-
+        private void InitializeEdgesDictionaries(IEnumerable<QuikGraph.TaggedEdge<string, double>> edges)
+        {
+            foreach (var edge in edges)
+            {
+                examinedEdges[(edge.Source, edge.Target, edge.Tag)] = false;
+            }
+        }
     }
 }
