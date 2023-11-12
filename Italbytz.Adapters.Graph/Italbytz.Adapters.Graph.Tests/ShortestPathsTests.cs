@@ -28,6 +28,21 @@ namespace Italbytz.Adapters.Graph.Tests
         }
 
         [Test]
+        public void TestTanenbaumWetherall()
+        {
+            var graph = Graphs.Instance.TanenbaumWetherall;
+            var vertices = graph.ToQuikGraph().Vertices.ToArray();
+            var parameters = new ShortestPathsParameters(vertices, graph);
+            solver = new ShortestPathsSolver("A");
+
+            var solution = solver.Solve(parameters);
+            foreach (var path in solution.Paths)
+            {
+                System.Console.WriteLine(path.ToString());
+            }
+        }
+
+        [Test]
         public void TestRomania()
         {
             var graph = Graphs.Instance.AIMARomania;

@@ -12,10 +12,41 @@ namespace Italbytz.Adapters.Graph
         public static Graphs Instance { get { return lazy.Value; } }
 
         public UndirectedGraph<string, ITaggedEdge<string, double>> AIMARomania { get; }
+        public UndirectedGraph<string, ITaggedEdge<string, double>> TanenbaumWetherall { get; }
 
         private Graphs()
         {
             AIMARomania = buildAIMARomania();
+            TanenbaumWetherall = buildTanenbaumWetherall();
+        }
+
+        private UndirectedGraph<string, ITaggedEdge<string, double>>? buildTanenbaumWetherall()
+        {
+            var vertex0 = "A";
+            var vertex1 = "B";
+            var vertex2 = "C";
+            var vertex3 = "D";
+            var vertex4 = "E";
+            var vertex5 = "F";
+            var vertex6 = "G";
+            var vertex7 = "H";
+
+            var edges = new List<ITaggedEdge<string, double>>
+            {
+                new TaggedEdge<string, double>(vertex0, vertex1, 2.0),
+                new TaggedEdge<string, double>(vertex0, vertex6, 6.0),
+                new TaggedEdge<string, double>(vertex1, vertex2, 7.0),
+                new TaggedEdge<string, double>(vertex1, vertex4, 2.0),
+                new TaggedEdge<string, double>(vertex2, vertex3, 3.0),
+                new TaggedEdge<string, double>(vertex2, vertex5, 3.0),
+                new TaggedEdge<string, double>(vertex3, vertex7, 2.0),
+                new TaggedEdge<string, double>(vertex4, vertex5, 2.0),
+                new TaggedEdge<string, double>(vertex4, vertex6, 1.0),
+                new TaggedEdge<string, double>(vertex5, vertex7, 2.0),
+                new TaggedEdge<string, double>(vertex6, vertex7, 4.0)
+            };
+
+            return new UndirectedGraph<string, ITaggedEdge<string, double>>() { Edges = edges };
         }
 
         private UndirectedGraph<string, ITaggedEdge<string, double>> buildAIMARomania()
