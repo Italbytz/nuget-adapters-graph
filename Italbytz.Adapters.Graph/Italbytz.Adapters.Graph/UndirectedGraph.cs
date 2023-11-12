@@ -11,6 +11,7 @@ namespace Italbytz.Adapters.Graph
         private bool darkMode = false;
         private Dictionary<string, bool>? markedVertices;
         private Dictionary<(string, string, double), bool>? markedEdges;
+        private Dictionary<(string, string, double), bool>? boldEdges;
 
         public UndirectedGraph()
         {
@@ -18,14 +19,15 @@ namespace Italbytz.Adapters.Graph
 
         public IEnumerable<TEdge> Edges { get; set; }
 
-        public string ToGraphviz() => ToGraphviz(false, null, null, null);
+        public string ToGraphviz() => ToGraphviz(false, null, null, null, null);
 
 
-        public string ToGraphviz(bool darkMode, Dictionary<string, bool>? markedVertices, Dictionary<(string, string, double), bool>? markedEdges, string? fileName)
+        public string ToGraphviz(bool darkMode, Dictionary<string, bool>? markedVertices, Dictionary<(string, string, double), bool>? markedEdges, Dictionary<(string, string, double), bool>? boldEdges, string? fileName)
         {
             this.darkMode = darkMode;
             this.markedVertices = markedVertices;
             this.markedEdges = markedEdges;
+            this.boldEdges = boldEdges;
             if (typeof(TVertex) == typeof(string) && typeof(TEdge) == typeof(ITaggedEdge<string, double>))
             {
                 var graph = ((IUndirectedGraph<string, ITaggedEdge<string, double>>)this).ToQuikGraph();
@@ -61,9 +63,11 @@ namespace Italbytz.Adapters.Graph
                     args.EdgeFormat.Label.Value = $"{edge.Tag}";
                     args.EdgeFormat.StrokeColor = darkMode ? GraphvizColor.White : GraphvizColor.Black;
                     args.EdgeFormat.FontColor = darkMode ? GraphvizColor.White : GraphvizColor.Black;
-                    if (markedEdges != null)
+                    if (markedEdges != null && boldEdges != null)
                     {
-                        args.EdgeFormat.Style = markedEdges[(args.Edge.Source, args.Edge.Target, args.Edge.Tag)] ? GraphvizEdgeStyle.Solid : GraphvizEdgeStyle.Dotted;
+                        args.EdgeFormat.Style = markedEdges[(args.Edge.Source, args.Edge.Target, args.Edge.Tag)] ?
+                        (boldEdges[(args.Edge.Source, args.Edge.Target, args.Edge.Tag)] ?
+                        GraphvizEdgeStyle.Bold : GraphvizEdgeStyle.Solid) : GraphvizEdgeStyle.Dotted;
                     }
                 }
             };

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Runtime.InteropServices.ComTypes;
 using Italbytz.Ports.Graph;
 using Microsoft.Msagl.Core.Geometry.Curves;
 using Microsoft.Msagl.Core.Layout;
@@ -22,6 +24,7 @@ namespace Italbytz.Adapters.Graph
         private readonly Dictionary<string, double> verticesCost = new();
         private readonly Dictionary<string, bool> expandedVertices = new();
         private readonly Dictionary<(string, string, double), bool> examinedEdges = new();
+        private readonly Dictionary<(string, string, double), bool> treeEdges = new();
 
         public ShortestPathsSolver() : this("A") { }
 
@@ -32,17 +35,16 @@ namespace Italbytz.Adapters.Graph
 
         private void ExamineEdgeHandler(QuikGraph.TaggedEdge<string, double> edge)
         {
-            examinedEdges[(edge.Source, edge.Target, edge.Tag)] = true;
-            ((UndirectedGraph<string, ITaggedEdge<string, double>>)originalGraph).ToGraphviz(false, expandedVertices, examinedEdges, $"graph{file}.dot");
-            file++;
-
             var pathCost = verticesCost[edge.Source] + edge.Tag;
             if (!expandedVertices[edge.Source])
             {
                 expandedVertices[edge.Source] = true;
-                Console.WriteLine($"Expanding {edge.Source} with current cost {verticesCost[edge.Source]}");
+                //Console.WriteLine($"Expanding {edge.Source} with current cost {verticesCost[edge.Source]}");
+                SaveGraph();
             }
-            Console.WriteLine($"Examining {edge.Source} -> {edge.Target}: {edge.Tag}");
+            examinedEdges[(edge.Source, edge.Target, edge.Tag)] = true;
+            SaveGraph();
+            //Console.WriteLine($"Examining {edge.Source} -> {edge.Target}: {edge.Tag}");
             if (verticesCost[edge.Target] == double.MaxValue)
             {
                 verticesCost[edge.Target] = pathCost;
@@ -56,6 +58,12 @@ namespace Italbytz.Adapters.Graph
             }
         }
 
+        private void SaveGraph()
+        {
+            ((UndirectedGraph<string, ITaggedEdge<string, double>>)originalGraph).ToGraphviz(false, expandedVertices, examinedEdges, treeEdges, $"dijkstra_{rootVertex}_{file}.dot");
+            file++;
+        }
+
         public IShortestPathsSolution Solve(IShortestPathsParameters parameters)
         {
             originalGraph = parameters.Graph;
@@ -66,8 +74,7 @@ namespace Italbytz.Adapters.Graph
 
             InitializeVerticesDictionaries(graph.Vertices);
             InitializeEdgesDictionaries(graph.Edges);
-            ((UndirectedGraph<string, ITaggedEdge<string, double>>)originalGraph).ToGraphviz(false, expandedVertices, examinedEdges, $"graph{file}.dot");
-            file++;
+            SaveGraph();
 
             dijkstra.ExamineEdge += new EdgeAction<string, QuikGraph.TaggedEdge<string, double>>(ExamineEdgeHandler);
             dijkstra.TreeEdge += new EdgeAction<string, QuikGraph.TaggedEdge<string, double>>(TreeEdgeHandler);
@@ -104,11 +111,6 @@ namespace Italbytz.Adapters.Graph
                 }
             }
 
-            ((UndirectedGraph<string, ITaggedEdge<string, double>>)originalGraph).ToGraphviz(false, expandedVertices, examinedEdges, $"graph{file}.dot");
-            file++;
-
-
-
             return new ShortestPathsSolution
             {
                 Paths = paths
@@ -117,6 +119,8 @@ namespace Italbytz.Adapters.Graph
 
         private void TreeEdgeHandler(QuikGraph.TaggedEdge<string, double> edge)
         {
+            treeEdges[(edge.Source, edge.Target, edge.Tag)] = true;
+            SaveGraph();
             //Console.WriteLine($"Handling edge {edge.Source} -> {edge.Target}");
         }
 
@@ -156,6 +160,7 @@ namespace Italbytz.Adapters.Graph
             foreach (var edge in edges)
             {
                 examinedEdges[(edge.Source, edge.Target, edge.Tag)] = false;
+                treeEdges[(edge.Source, edge.Target, edge.Tag)] = false;
             }
         }
     }
