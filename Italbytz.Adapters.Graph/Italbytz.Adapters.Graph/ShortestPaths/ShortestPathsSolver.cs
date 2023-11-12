@@ -16,7 +16,9 @@ namespace Italbytz.Adapters.Graph
 {
     public class ShortestPathsSolver : IShortestPathsSolver
     {
-        private readonly String rootVertex;
+        private readonly string rootVertex;
+        private Ports.Graph.IUndirectedGraph<string, ITaggedEdge<string, double>> originalGraph;
+        int file = 0;
         private readonly Dictionary<string, double> verticesCost = new();
         private readonly Dictionary<string, bool> expandedVertices = new();
         private readonly Dictionary<(string, string, double), bool> examinedEdges = new();
@@ -31,6 +33,8 @@ namespace Italbytz.Adapters.Graph
         private void ExamineEdgeHandler(QuikGraph.TaggedEdge<string, double> edge)
         {
             examinedEdges[(edge.Source, edge.Target, edge.Tag)] = true;
+            ((UndirectedGraph<string, ITaggedEdge<string, double>>)originalGraph).ToGraphviz(false, expandedVertices, examinedEdges, $"graph{file}.dot");
+            file++;
 
             var pathCost = verticesCost[edge.Source] + edge.Tag;
             if (!expandedVertices[edge.Source])
@@ -54,14 +58,16 @@ namespace Italbytz.Adapters.Graph
 
         public IShortestPathsSolution Solve(IShortestPathsParameters parameters)
         {
-            var graph = parameters.Graph.ToQuikGraph();
+            originalGraph = parameters.Graph;
+            var graph = originalGraph.ToQuikGraph();
 
             var bidirectionalGraph = graph.ToBidirectionalGraph();
             var dijkstra = new DijkstraShortestPathAlgorithm<string, QuikGraph.TaggedEdge<string, double>>(bidirectionalGraph, ((edge) => edge.Tag));
 
             InitializeVerticesDictionaries(graph.Vertices);
             InitializeEdgesDictionaries(graph.Edges);
-            Console.WriteLine(value: ((UndirectedGraph<string, ITaggedEdge<string, double>>)parameters.Graph).ToGraphviz(false, expandedVertices, examinedEdges));
+            ((UndirectedGraph<string, ITaggedEdge<string, double>>)originalGraph).ToGraphviz(false, expandedVertices, examinedEdges, $"graph{file}.dot");
+            file++;
 
             dijkstra.ExamineEdge += new EdgeAction<string, QuikGraph.TaggedEdge<string, double>>(ExamineEdgeHandler);
             dijkstra.TreeEdge += new EdgeAction<string, QuikGraph.TaggedEdge<string, double>>(TreeEdgeHandler);
@@ -98,7 +104,9 @@ namespace Italbytz.Adapters.Graph
                 }
             }
 
-            Console.WriteLine(value: ((UndirectedGraph<string, ITaggedEdge<string, double>>)parameters.Graph).ToGraphviz(false, expandedVertices, examinedEdges));
+            ((UndirectedGraph<string, ITaggedEdge<string, double>>)originalGraph).ToGraphviz(false, expandedVertices, examinedEdges, $"graph{file}.dot");
+            file++;
+
 
 
             return new ShortestPathsSolution

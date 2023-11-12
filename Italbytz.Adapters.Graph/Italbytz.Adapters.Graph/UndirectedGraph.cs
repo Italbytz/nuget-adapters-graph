@@ -18,10 +18,10 @@ namespace Italbytz.Adapters.Graph
 
         public IEnumerable<TEdge> Edges { get; set; }
 
-        public string ToGraphviz() => ToGraphviz(false, null, null);
+        public string ToGraphviz() => ToGraphviz(false, null, null, null);
 
 
-        public string ToGraphviz(bool darkMode, Dictionary<string, bool>? markedVertices, Dictionary<(string, string, double), bool>? markedEdges)
+        public string ToGraphviz(bool darkMode, Dictionary<string, bool>? markedVertices, Dictionary<(string, string, double), bool>? markedEdges, string? fileName)
         {
             this.darkMode = darkMode;
             this.markedVertices = markedVertices;
@@ -29,7 +29,12 @@ namespace Italbytz.Adapters.Graph
             if (typeof(TVertex) == typeof(string) && typeof(TEdge) == typeof(ITaggedEdge<string, double>))
             {
                 var graph = ((IUndirectedGraph<string, ITaggedEdge<string, double>>)this).ToQuikGraph();
-                return graph.ToGraphviz(StandardGraphvizAlgorithm);
+                var graphViz = graph.ToGraphviz(StandardGraphvizAlgorithm);
+                if (fileName != null)
+                {
+                    System.IO.File.WriteAllText(fileName, graphViz);
+                }
+                return graphViz;
             }
             return "";
         }
