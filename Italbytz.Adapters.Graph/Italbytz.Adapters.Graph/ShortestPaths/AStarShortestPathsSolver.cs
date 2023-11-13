@@ -8,12 +8,7 @@ namespace Italbytz.Adapters.Graph
 {
     public class AStarShortestPathsSolver : AShortestPathsSolver
     {
-        public AStarShortestPathsSolver() : base()
-        {
-
-        }
-
-        public AStarShortestPathsSolver(string rootVertex) : base(rootVertex)
+        public AStarShortestPathsSolver(string rootVertex = "A", bool saveGraphs = false) : base(rootVertex, saveGraphs)
         {
 
         }

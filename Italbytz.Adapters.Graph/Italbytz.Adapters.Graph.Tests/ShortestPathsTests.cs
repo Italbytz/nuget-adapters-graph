@@ -16,7 +16,7 @@ namespace Italbytz.Adapters.Graph.Tests
             solver = new ShortestPathsSolver();
         }
 
-        /*[Test]
+        [Test]
         public void TestSolverGivesSolution()
         {
             var parameters = new ShortestPathsParameters();
@@ -40,7 +40,8 @@ namespace Italbytz.Adapters.Graph.Tests
             {
                 System.Console.WriteLine(path.ToString());
             }
-        }*/
+        }
+
 
         [Test]
         public void TestRomania()
@@ -57,7 +58,6 @@ namespace Italbytz.Adapters.Graph.Tests
             }
         }
 
-        /*
         [Test]
         public void TestAStarRomania()
         {
@@ -71,7 +71,7 @@ namespace Italbytz.Adapters.Graph.Tests
             {
                 System.Console.WriteLine(path.ToString());
             }
-        }*/
+        }
 
     }
 }

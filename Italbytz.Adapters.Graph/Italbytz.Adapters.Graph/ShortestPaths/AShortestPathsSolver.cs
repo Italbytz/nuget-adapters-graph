@@ -25,12 +25,12 @@ namespace Italbytz.Adapters.Graph
 
         protected Ports.Graph.IUndirectedGraph<string, ITaggedEdge<string, double>>? originalGraph;
         protected int file = 0;
+        protected bool saveGraphs = false;
 
-        public AShortestPathsSolver() : this("A") { }
-
-        public AShortestPathsSolver(string rootVertex)
+        public AShortestPathsSolver(string rootVertex = "A", bool saveGraphs = false)
         {
             this.rootVertex = rootVertex;
+            this.saveGraphs = saveGraphs;
         }
 
         public IShortestPathsSolution Solve(IShortestPathsParameters parameters)
@@ -102,7 +102,9 @@ namespace Italbytz.Adapters.Graph
                 GraphEvent.EdgeExamination => "e",
                 _ => "",
             };
-            ((UndirectedGraph<string, ITaggedEdge<string, double>>)originalGraph).ToGraphviz(false, expandedVertices, examinedEdges, treeEdges, $"sp_{rootVertex}_{file}_{suffix}.dot");
+            var fileName = $"sp_{rootVertex}_{file}_{suffix}.dot";
+
+            ((UndirectedGraph<string, ITaggedEdge<string, double>>)originalGraph).ToGraphviz(false, expandedVertices, examinedEdges, treeEdges, fileName);
             file++;
         }
 
@@ -110,7 +112,6 @@ namespace Italbytz.Adapters.Graph
         {
             treeEdges[(edge.Source, edge.Target, edge.Tag)] = true;
             SaveGraph(GraphEvent.TreeEdge);
-            //Console.WriteLine($"Handling edge {edge.Source} -> {edge.Target}");
         }
 
         protected void ExamineEdgeHandler(QuikGraph.TaggedEdge<string, double> edge)
@@ -119,12 +120,10 @@ namespace Italbytz.Adapters.Graph
             if (!expandedVertices[edge.Source])
             {
                 expandedVertices[edge.Source] = true;
-                //Console.WriteLine($"Expanding {edge.Source} with current cost {verticesCost[edge.Source]}");
                 SaveGraph(GraphEvent.VertexExpansion);
             }
             examinedEdges[(edge.Source, edge.Target, edge.Tag)] = true;
             SaveGraph(GraphEvent.EdgeExamination);
-            //Console.WriteLine($"Examining {edge.Source} -> {edge.Target}: {edge.Tag}");
             if (verticesCost[edge.Target] == double.MaxValue)
             {
                 verticesCost[edge.Target] = pathCost;

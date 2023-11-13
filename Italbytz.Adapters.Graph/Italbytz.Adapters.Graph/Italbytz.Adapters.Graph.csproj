@@ -4,7 +4,7 @@
 		<TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
 		<Nullable>enable</Nullable>
 		<PackOnBuild>true</PackOnBuild>
-		<PackageVersion>0.1.0</PackageVersion>
+		<PackageVersion>0.2.0</PackageVersion>
 		<Authors>Robin Nunkesser</Authors>
 		<PackageLicenseUrl>https://github.com/Italbytz/nuget-adapters-graph/blob/main/LICENSE</PackageLicenseUrl>
 		<PackageProjectUrl>https://github.com/Italbytz/nuget-adapters-graph</PackageProjectUrl>
@@ -34,7 +34,7 @@
 		<PackageReference Include="Italbytz.Extensions.Random" Version="0.1.1" />
 	</ItemGroup>
 	<ItemGroup>
-	  <Folder Include="MinimumSpanningTree\" />
-	  <Folder Include="ShortestPaths\" />
+		<Folder Include="MinimumSpanningTree\" />
+		<Folder Include="ShortestPaths\" />
 	</ItemGroup>
 </Project>

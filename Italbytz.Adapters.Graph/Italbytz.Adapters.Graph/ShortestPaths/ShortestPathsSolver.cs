@@ -5,12 +5,7 @@ namespace Italbytz.Adapters.Graph
 {
     public class ShortestPathsSolver : AShortestPathsSolver
     {
-        public ShortestPathsSolver() : base()
-        {
-
-        }
-
-        public ShortestPathsSolver(string rootVertex) : base(rootVertex)
+        public ShortestPathsSolver(string rootVertex = "A", bool saveGraphs = false) : base(rootVertex, saveGraphs)
         {
 
         }
