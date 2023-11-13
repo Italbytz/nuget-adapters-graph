@@ -40,7 +40,7 @@ namespace Italbytz.Adapters.Graph.Tests
             {
                 System.Console.WriteLine(path.ToString());
             }
-        }
+        }*/
 
         [Test]
         public void TestRomania()
@@ -55,8 +55,9 @@ namespace Italbytz.Adapters.Graph.Tests
             {
                 System.Console.WriteLine(path.ToString());
             }
-        }*/
+        }
 
+        /*
         [Test]
         public void TestAStarRomania()
         {
@@ -70,7 +71,7 @@ namespace Italbytz.Adapters.Graph.Tests
             {
                 System.Console.WriteLine(path.ToString());
             }
-        }
+        }*/
 
     }
 }

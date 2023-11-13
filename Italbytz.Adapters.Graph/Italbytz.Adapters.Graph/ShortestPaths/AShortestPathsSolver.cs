@@ -9,6 +9,14 @@ namespace Italbytz.Adapters.Graph
 {
     public abstract class AShortestPathsSolver : IShortestPathsSolver
     {
+        private enum GraphEvent
+        {
+            Start,
+            TreeEdge,
+            VertexExpansion,
+            EdgeExamination
+        }
+
         protected string rootVertex;
         protected readonly Dictionary<string, double> verticesCost = new();
         protected readonly Dictionary<string, bool> expandedVertices = new();
@@ -35,7 +43,7 @@ namespace Italbytz.Adapters.Graph
 
             InitializeVerticesDictionaries(graph.Vertices);
             InitializeEdgesDictionaries(graph.Edges);
-            SaveGraph();
+            SaveGraph(GraphEvent.Start);
 
             if (algorithm is DijkstraShortestPathAlgorithm<string, QuikGraph.TaggedEdge<string, double>> dijkstra)
             {
@@ -84,16 +92,24 @@ namespace Italbytz.Adapters.Graph
 
         protected abstract ShortestPathAlgorithmBase<string, QuikGraph.TaggedEdge<string, double>, IVertexListGraph<string, QuikGraph.TaggedEdge<string, double>>> GetAlgorithm(BidirectionalGraph<string, QuikGraph.TaggedEdge<string, double>> graph);
 
-        protected void SaveGraph()
+        private void SaveGraph(GraphEvent graphEvent)
         {
-            ((UndirectedGraph<string, ITaggedEdge<string, double>>)originalGraph).ToGraphviz(false, expandedVertices, examinedEdges, treeEdges, $"dijkstra_{rootVertex}_{file}.dot");
+            var suffix = graphEvent switch
+            {
+                GraphEvent.Start => "s",
+                GraphEvent.TreeEdge => "t",
+                GraphEvent.VertexExpansion => "v",
+                GraphEvent.EdgeExamination => "e",
+                _ => "",
+            };
+            ((UndirectedGraph<string, ITaggedEdge<string, double>>)originalGraph).ToGraphviz(false, expandedVertices, examinedEdges, treeEdges, $"sp_{rootVertex}_{file}_{suffix}.dot");
             file++;
         }
 
         protected void TreeEdgeHandler(QuikGraph.TaggedEdge<string, double> edge)
         {
             treeEdges[(edge.Source, edge.Target, edge.Tag)] = true;
-            SaveGraph();
+            SaveGraph(GraphEvent.TreeEdge);
             //Console.WriteLine($"Handling edge {edge.Source} -> {edge.Target}");
         }
 
@@ -104,10 +120,10 @@ namespace Italbytz.Adapters.Graph
             {
                 expandedVertices[edge.Source] = true;
                 //Console.WriteLine($"Expanding {edge.Source} with current cost {verticesCost[edge.Source]}");
-                SaveGraph();
+                SaveGraph(GraphEvent.VertexExpansion);
             }
             examinedEdges[(edge.Source, edge.Target, edge.Tag)] = true;
-            SaveGraph();
+            SaveGraph(GraphEvent.EdgeExamination);
             //Console.WriteLine($"Examining {edge.Source} -> {edge.Target}: {edge.Tag}");
             if (verticesCost[edge.Target] == double.MaxValue)
             {
