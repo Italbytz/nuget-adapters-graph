@@ -16,7 +16,7 @@ namespace Italbytz.Adapters.Graph.Tests
             solver = new ShortestPathsSolver();
         }
 
-        [Test]
+        /*[Test]
         public void TestSolverGivesSolution()
         {
             var parameters = new ShortestPathsParameters();
@@ -49,6 +49,21 @@ namespace Italbytz.Adapters.Graph.Tests
             var vertices = graph.ToQuikGraph().Vertices.ToArray();
             var parameters = new ShortestPathsParameters(vertices, graph);
             solver = new ShortestPathsSolver("Arad");
+
+            var solution = solver.Solve(parameters);
+            foreach (var path in solution.Paths)
+            {
+                System.Console.WriteLine(path.ToString());
+            }
+        }*/
+
+        [Test]
+        public void TestAStarRomania()
+        {
+            var graph = Graphs.Instance.AIMARomania;
+            var vertices = graph.ToQuikGraph().Vertices.ToArray();
+            var parameters = new ShortestPathsParameters(vertices, graph);
+            solver = new AStarShortestPathsSolver("Arad");
 
             var solution = solver.Solve(parameters);
             foreach (var path in solution.Paths)

@@ -1,6 +1,7 @@
 ﻿using System;
 using Italbytz.Ports.Graph;
 using System.Collections.Generic;
+using QuikGraph.Algorithms;
 
 namespace Italbytz.Adapters.Graph
 {
@@ -12,6 +13,7 @@ namespace Italbytz.Adapters.Graph
         public static Graphs Instance { get { return lazy.Value; } }
 
         public UndirectedGraph<string, ITaggedEdge<string, double>> AIMARomania { get; }
+        public Func<string, double> AIMARomaniaHeuristic { get; private set; }
         public UndirectedGraph<string, ITaggedEdge<string, double>> TanenbaumWetherall { get; }
 
         private Graphs()
@@ -71,6 +73,31 @@ namespace Italbytz.Adapters.Graph
             var vertex17 = "Vaslui";
             var vertex18 = "Hirsova";
             var vertex19 = "Eforie";
+
+            var AIMARomaniaHeuristicDictionary = new Dictionary<string, double>
+            {
+                { vertex0, 366 },
+                { vertex13, 0 },
+                { vertex9,160 },
+                { vertex6,242 },
+                { vertex19,161 },
+                { vertex10,176 },
+                { vertex12,77 },
+                { vertex18,151 },
+                { vertex16,226 },
+                { vertex4,244 },
+                { vertex5,241 },
+                { vertex15,234 },
+                { vertex3,380 },
+                { vertex11,100 },
+                { vertex8,193 },
+                { vertex7,253 },
+                { vertex1,329 },
+                { vertex14,80 },
+                { vertex17,199 },
+                { vertex2,374 }
+            };
+            AIMARomaniaHeuristic = AlgorithmExtensions.GetIndexer(AIMARomaniaHeuristicDictionary);
 
             var edges = new List<ITaggedEdge<string, double>>
             {

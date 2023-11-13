@@ -1,18 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Runtime.InteropServices.ComTypes;
-using Italbytz.Ports.Graph;
-using Microsoft.Msagl.Core.Geometry.Curves;
-using Microsoft.Msagl.Core.Layout;
-using Microsoft.Msagl.Core.ProjectionSolver;
-using Microsoft.Msagl.GraphmapsWithMesh;
-using QuikGraph;
-using QuikGraph.Algorithms;
-using QuikGraph.Algorithms.Observers;
+﻿using QuikGraph;
 using QuikGraph.Algorithms.ShortestPath;
-using QuikGraph.Collections;
 
 namespace Italbytz.Adapters.Graph
 {

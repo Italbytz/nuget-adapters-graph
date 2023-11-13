@@ -37,9 +37,13 @@ namespace Italbytz.Adapters.Graph
             InitializeEdgesDictionaries(graph.Edges);
             SaveGraph();
 
-            if (algorithm is DijkstraShortestPathAlgorithm<string, QuikGraph.TaggedEdge<string, double>>)
+            if (algorithm is DijkstraShortestPathAlgorithm<string, QuikGraph.TaggedEdge<string, double>> dijkstra)
             {
-                ((DijkstraShortestPathAlgorithm<string, QuikGraph.TaggedEdge<string, double>>)algorithm).ExamineEdge += new EdgeAction<string, QuikGraph.TaggedEdge<string, double>>(ExamineEdgeHandler);
+                dijkstra.ExamineEdge += new EdgeAction<string, QuikGraph.TaggedEdge<string, double>>(ExamineEdgeHandler);
+            }
+            if (algorithm is AStarShortestPathAlgorithm<string, QuikGraph.TaggedEdge<string, double>> astar)
+            {
+                astar.ExamineEdge += new EdgeAction<string, QuikGraph.TaggedEdge<string, double>>(ExamineEdgeHandler);
             }
 
             algorithm.TreeEdge += new EdgeAction<string, QuikGraph.TaggedEdge<string, double>>(TreeEdgeHandler);
